@@ -1,0 +1,12 @@
+List non-hidden directories:
+
+ls -d -- *(/)
+List all directories:
+
+ls -d -- *(D/)
+(. and .. are always excluded, add them individually if you want them)
+
+Also include symlinks to directories:
+
+ls -d -- *(D-/)
+(- makes so further qualifiers apply after symlink resolution).
