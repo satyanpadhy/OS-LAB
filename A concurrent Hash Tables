@@ -1,0 +1,29 @@
+This concurrent hash table is straightforward, is built using the concurrent
+lists we developed earlier, and works incredibly well. The reason for its good performance is that instead of having a single lock for the entire
+structure, it uses a lock per hash bucket (each of which is represented by a list. Doing so enables many concurrent operations to take place.
+
+/*CODE*/
+
+
+#define BUCKETS (101)
+
+ typedef struct __hash_t {
+ list_t lists[BUCKETS];
+ } hash_t;
+
+ void Hash_Init(hash_t *H) {
+ int i;
+ for (i = 0; i < BUCKETS; i++) {
+ List_Init(&H->lists[i]);
+ }
+ }
+
+ int Hash_Insert(hash_t *H, int key) {
+ int bucket = key % BUCKETS;
+ return List_Insert(&H->lists[bucket], key);
+ }
+
+ int Hash_Lookup(hash_t *H, int key) {
+ int bucket = key % BUCKETS;
+ return List_Lookup(&H->lists[bucket], key);
+ }
