@@ -1,0 +1,5 @@
+S_IFMT is a bit mask for file type (see man stat)
+
+bitwise AND-ing directly with mystat.st_mode (mystat.st_mode & S_IFMT) means to consider only the bits involved to determine the file type (regular file, socket, block or char device, etc.)
+
+doing a bitwise AND of mystat.st_mode with the bitwise negated bitmask (mystat.st_mode & ~S_IFMT) means to ignore the bits explained above, keeping just the ones need to determine file permission (the 9 lines below that command)
