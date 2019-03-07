@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<pthread.h>
+#include<stdlib.h>
+#define no_threads 10
+#define n 20
+static long sum = 0;
+long a[n];
+static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
+static void *slave(void *st)
+{
+long rank=(long*)st;
+long my_n=n/no_threads;
+long my_first_i = my_n *rank;
+long my_last_i = my_first_i + my_n;
+long i;
+for (i = my_first_i; i < my_last_i; i++)
+{
+pthread_mutex_lock(&mtx);
+printf(" thread rank = %d Global sum it is fetching is %d \n", rank, sum);
+sum += *(a + i);
+printf(" hello from thread %d and its partial sum = %d\n",rank,sum);
+pthread_mutex_unlock(&mtx);
+}
+return NULL; }
+main()
+{
+long i;
+pthread_t thread[10];
+for (i = 0; i < n; i++)
+a[i] = i+1;
+for (i = 0; i < no_threads; i++)
+{
+if (pthread_create(&thread[i], NULL, slave,(void*) i) != 0)
+perror("Pthread create fails");
+}
+for (i = 0; i < no_threads; i++) {
+if (pthread_join(thread[i], NULL) != 0)
+perror("Pthread join fails"); }
+printf("The sum of numbers from %d to %d is %d\n",a[0],a[n-1], sum);
+exit(0); }
